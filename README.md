@@ -4,7 +4,7 @@ O Objetivo desse projeto, é criar um ambiente de desenvolvimento "genérico" in
 
 ## Como usar
 
-A unica coisa que você precisa é rodar o script bash "install.sh" e um sistema baseado em ubuntu será instalado no seu sistema.
+A unica coisa que você precisa é rodar o script bash "install.sh" e um sistema debian será instalado no seu sistema.
 
 ## Requisitos
 
