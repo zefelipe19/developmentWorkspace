@@ -1,16 +1,24 @@
-#!/bin/bash
-echo "Instalando container..."
-distrobox assemble create --file image.ini
-echo "Container debian criado..."
-echo "entrando no container..."
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-ls
-cp ./zshrc $HOME/DistroBox/Debian/
-cp ./install_asdf.sh $HOME/DistroBox/Debian/
-cd $HOME/DistroBox/Debian/
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-mv zshrc .zshrc
+if ! command -v distrobox >/dev/null 2>&1; then
+  echo "Erro: Distrobox não encontrado. Instale-o no host e tente novamente." >&2
+  exit 1
+fi
 
-echo "Execute install_asdf para instalar o asdf"
-distrobox enter debian
+if ! command -v docker >/dev/null 2>&1 && ! command -v podman >/dev/null 2>&1; then
+  echo "Erro: instale Docker ou Podman no host para o Distrobox criar o container." >&2
+  exit 1
+fi
+
+echo "Criando o ambiente Debian de desenvolvimento..."
+distrobox assemble create --file "$SCRIPT_DIR/image.ini"
+
+echo "Instalando asdf dentro do container..."
+distrobox enter dev-workspace -- bash -s < "$SCRIPT_DIR/install_asdf.sh"
+
+echo "Ambiente criado. Acessando o container Debian..."
+exec distrobox enter dev-workspace
 
